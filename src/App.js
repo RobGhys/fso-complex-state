@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import './App.css';
 
-const Title = () => <h1>give feedback</h1>;
+const Title = ({title}) => <h1>{title}</h1>;
 
 // Conditional rendering depending on the state of the app
 const History = (props) => {
@@ -17,6 +17,14 @@ const History = (props) => {
         </div>
     )
 };
+
+const ShowStat = ({text, score}) => {
+    return (
+        <div>
+            {text} {score}
+        </div>
+    )
+}
 
 const Button = ({ handleClick, text }) => (
     <button onClick={handleClick}>
@@ -47,24 +55,23 @@ const App = () => {
         setNeutral(neutral + 1);
     };
 
+    const totalFeedbacks = good + neutral + bad;
   return (
       <div>
-          <Title />
+          <Title title={'give feedback'} />
           <div className="row">
               <Button handleClick={handleGoodClick} text='good' />
               <Button handleClick={handleNeutralClick} text='neutral' />
               <Button handleClick={handleBadClick} text='bad' />
           </div>
-          <div>
-              good {good}
-          </div>
-          <div>
-              neutral {neutral}
-          </div>
-          <div>
-              bad {bad}
-          </div>
-          <History allClicks={allClicks} />
+          <Title title={'statistics'} />
+          <ShowStat text={'good'} score={good} />
+          <ShowStat text={'neutral'} score={neutral} />
+          <ShowStat text={'bad'} score={bad} />
+          <ShowStat text={'all'} score={totalFeedbacks} />
+          <ShowStat text={'average'} score={(good - bad) / totalFeedbacks} />
+          <ShowStat text={'positive'} score={good / totalFeedbacks} />
+
       </div>
   )
 }
