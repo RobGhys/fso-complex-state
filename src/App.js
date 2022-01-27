@@ -5,24 +5,58 @@ import './App.css';
 const Title = ({title}) => <h1>{title}</h1>;
 
 // Conditional rendering depending on the state of the app
-const History = (props) => {
+const Display = (props) => {
     if (props.allClicks.length === 0) {
         return (
-            <div>The app is used by pressing the buttons</div>
+            <div>No feedback given</div>
         )
     }
     return (
         <div>
-            button press history: {props.allClicks.join(' ')}
+            <Statistics feedbacks={props.feedbacks} />
         </div>
     )
 };
 
-const ShowStat = ({text, score}) => {
+const Statistics = ({feedbacks}) => {
+    const goodScore = feedbacks[0].score;
+    const neutralScore = feedbacks[1].score;
+    const badScore = feedbacks[2].score;
+
+    const totalFeedbacks = goodScore + neutralScore + badScore;
+    const avgFeedbacks = (goodScore - badScore) / totalFeedbacks;
+    const positiveFeedbacks = goodScore / totalFeedbacks;
+
     return (
         <div>
-            {text} {score}
+            <Title title={'statistics'} />
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ShowStat text={feedbacks[0].name} score={feedbacks[0].score} />
+                    <ShowStat text={feedbacks[1].name} score={feedbacks[1].score} />
+                    <ShowStat text={feedbacks[2].name} score={feedbacks[2].score} />
+                    <ShowStat text={'all'} score={totalFeedbacks} />
+                    <ShowStat text={'average'} score={avgFeedbacks} />
+                    <ShowStat text={'positive'} score={positiveFeedbacks} />
+                </tbody>
+
+            </table>
         </div>
+)}
+
+const ShowStat = ({text, score}) => {
+    return (
+        <tr>
+            <th>{text}</th>
+            <th>{score}</th>
+        </tr>
     )
 }
 
@@ -56,6 +90,22 @@ const App = () => {
     };
 
     const totalFeedbacks = good + neutral + bad;
+
+    const feedbacks = [
+         {
+            name: 'good',
+            score: good
+        },
+        {
+            name: 'neutral',
+            score: neutral
+        },
+        {
+            name: 'bad',
+            score: bad
+        },
+    ]
+
   return (
       <div>
           <Title title={'give feedback'} />
@@ -64,14 +114,8 @@ const App = () => {
               <Button handleClick={handleNeutralClick} text='neutral' />
               <Button handleClick={handleBadClick} text='bad' />
           </div>
-          <Title title={'statistics'} />
-          <ShowStat text={'good'} score={good} />
-          <ShowStat text={'neutral'} score={neutral} />
-          <ShowStat text={'bad'} score={bad} />
-          <ShowStat text={'all'} score={totalFeedbacks} />
-          <ShowStat text={'average'} score={(good - bad) / totalFeedbacks} />
-          <ShowStat text={'positive'} score={good / totalFeedbacks} />
 
+          <Display allClicks={allClicks} feedbacks={feedbacks}/>
       </div>
   )
 }
