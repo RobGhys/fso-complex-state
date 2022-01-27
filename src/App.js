@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+
 import './App.css';
 
-function App() {
+const App = () => {
+  const [clicks, setClicks] = useState({
+      left: 0,
+      right: 0
+  });
+
+    // Create a copy of clicks, and modify the left click by adding 1 to its previous value
+  const handleLeftClick = () => setClicks({...clicks, left: clicks.left + 1});
+
+  const handleRightClick = () => setClicks({...clicks, right: clicks.right + 1});
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <div>
+        {clicks.left}
+        <button onClick={handleLeftClick}>
+          left
+        </button>
+        <button onClick={handleRightClick}>
+          right
+        </button>
+        {clicks.right}
+      </div>
+  )
 }
 
 export default App;
